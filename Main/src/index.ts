@@ -2,6 +2,7 @@ import inquirer from "inquirer";
 import logo from "asciiart-logo";
 import Db from "./server.js";
 
+
 //declare a const to get DB instance
 const db = new Db();
 
