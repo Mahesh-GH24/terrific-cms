@@ -76,6 +76,22 @@ function loadCMSPrompts() {
                     value: "DELETE_EMPLOYEE"
                 },
                 {
+                    name: "View Employees by Manager",
+                    value: "VIEW_EMPS_BY_MGR"
+                },
+                {
+                    name: "View Employees By Department",
+                    value: "VIEW_EMPS_BY_DEPT"
+                },
+                {
+                    name: "Update Employees Manager",
+                    value: "UPDATE_EMPLOYEE_MANAGER"
+                },
+                {
+                    name: "View Total Utilized Budget By Department",
+                    value: "VIEW_TOTAL_BUDGET_BY_DEPT"
+                },
+                {
                     name: "Quit",
                     value: "QUIT"
                 }
@@ -116,6 +132,19 @@ function loadCMSPrompts() {
                 case 'DELETE_EMPLOYEE': // DONE
                     deleteEmployee();
                     break;
+                case 'VIEW_EMPS_BY_MGR': // DONE
+                    viewEmployeesByManager();
+                    break;
+                case 'VIEW_EMPS_BY_DEPT': // DONE
+                    viewEmployeesByDepartment();
+                    break;
+                case 'UPDATE_EMPLOYEE_MANAGER': // DONE
+                    updateEmployeeManager();
+                    break;
+                case 'VIEW_TOTAL_BUDGET_BY_DEPT': // DONE
+                    viewTotalBudgetByDepartment();
+                    break;
+
                 default:
                     quit();
                     break;
@@ -319,6 +348,52 @@ async function updateEmployeeRole() {
         })
 }
 
+async function updateEmployeeManager() {
+
+    //fetch managers
+    const queryManagerResp = await db.getAllManagers();
+
+    const managersArray = queryManagerResp.rows.map(manager => {
+        return {
+            name: manager.manager,
+            value: manager.manager_id
+        }
+    })
+
+    //fetch employees
+    const queryEmpResp = await db.getAllEmployees();
+
+    const employeesArray = queryEmpResp.rows.map(emp => {
+        return {
+            name: emp.first_name + ' ' + emp.last_name,
+            value: emp.id
+        }
+    })
+
+    inquirer.prompt([
+        {
+            name: 'employee',
+            message: "Which employee's manager do you want to update?",
+            type: 'list',
+            choices: employeesArray
+        },
+        {
+            name: 'newManager',
+            message: "Which manager do you want to assign to the selected employee?",
+            type: 'list',
+            choices: managersArray
+        }
+    ])
+        .then(resp => {
+            db.UpdateEmployeeManager(resp.employee, resp.newManager)
+                .then(() => {
+                    console.log("Employee's Manager has been updated");
+                    loadCMSPrompts();
+                })
+        })
+}
+
+
 //Bonus - Delete Department
 
 // Delete Department
@@ -408,6 +483,102 @@ async function deleteEmployee() {
                     console.log("Employee has been deleted");
                     loadCMSPrompts();
                 })
+        })
+}
+
+// View Employees By Manager 
+async function viewEmployeesByManager() {
+    //fetch Managers
+    const queryResp = await db.getAllManagers();
+
+    const choicesArray = queryResp.rows.map(emp => {
+        return {
+            name: emp.manager,
+            value: emp.manager_id
+        }
+    })
+
+    inquirer.prompt([
+        {
+            name: 'emp',
+            message: "Please select the Manager",
+            type: 'list',
+            choices: choicesArray
+        },
+
+    ])
+        .then(resp => {
+            db.getEmployeesByManager(resp.emp)
+                .then(({ rows }) => {
+                    const employees = rows;
+                    console.log('\n');
+                    console.table(employees);
+                })
+                .then(() => loadCMSPrompts());
+        })
+}
+
+// View Employees By Department 
+async function viewEmployeesByDepartment() {
+    //fetch Departments
+    const queryResp = await db.getAllDepartments();
+
+    const choicesArray = queryResp.rows.map(dept => {
+        return {
+            name: dept.name,
+            value: dept.id
+        }
+    })
+
+    inquirer.prompt([
+        {
+            name: 'dept',
+            message: "Please select the Department",
+            type: 'list',
+            choices: choicesArray
+        },
+
+    ])
+        .then(resp => {
+            db.getEmployeesByDepartment(resp.dept)
+                .then(({ rows }) => {
+                    const employees = rows;
+                    console.log('\n');
+                    console.table(employees);
+                })
+                .then(() => loadCMSPrompts());
+        })
+}
+
+// View Total Utilized Budget By Department
+async function viewTotalBudgetByDepartment() {
+    //fetch Departments
+    const queryResp = await db.getAllDepartments();
+
+    const choicesArray = queryResp.rows.map(dept => {
+        return {
+            name: dept.name,
+            value: dept.id
+        }
+    })
+
+    inquirer.prompt([
+        {
+            name: 'dept',
+            message: "Please select the Department to view the Total Utilized Budget",
+            type: 'list',
+            choices: choicesArray
+        },
+
+    ])
+        .then(resp => {
+            db.getCombineSalariesByDepartment(resp.dept)
+                .then(({ rows }) => {
+                    const employees = rows;
+                    console.log('\n');
+                    console.table(employees);
+                })
+                .then(() => loadCMSPrompts());
         })
 }
 
