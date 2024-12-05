@@ -19,8 +19,8 @@ const db = new Db();
 
 init();
 
-function init(){
-    const logoText = logo({name: "Employee Manager"}).render();
+function init() {
+    const logoText = logo({ name: "Employee Manager" }).render();
     console.log(logoText);
     //console.log("Employee Manager");
     loadCMSPrompts();
@@ -28,13 +28,13 @@ function init(){
 
 
 
-function loadCMSPrompts(){
+function loadCMSPrompts() {
     inquirer.prompt([
         {
             type: 'list',
             name: 'choice',
             message: "What would you like to do? (use arrow keys)",
-            choices:[
+            choices: [
                 {
                     name: "View All Employees",
                     value: "VIEW_EMPLOYEES"
@@ -64,79 +64,100 @@ function loadCMSPrompts(){
                     value: "ADD_DEPARTMENT"
                 },
                 {
+                    name: "Delete Department",
+                    value: "DELETE_DEPARTMENT"
+                },
+                {
+                    name: "Delete Role",
+                    value: "DELETE_ROLE"
+                },
+                {
+                    name: "Delete Employee",
+                    value: "DELETE_EMPLOYEE"
+                },
+                {
                     name: "Quit",
                     value: "QUIT"
                 }
             ]
         }
     ])
-    .then(res => {
-        const choice = res.choice;
+        .then(res => {
+            const choice = res.choice;
 
-        switch(choice) {
-            case 'VIEW_EMPLOYEES': // DONE
-                viewAllEmployees(); 
-                break;
-            case 'ADD_EMPLOYEE': // DONE
-                addEmployee();
-                break;
-            case 'UPDATE_EMPLOYEE_ROLE': // DONE
-                updateEmployeeRole();
-                break;
-            case 'VIEW_ROLES': // DONE
-                viewAllRoles();
-                break;
-            case 'ADD_ROLE': // DONE 
-                addRole();
-                break;
-            case 'View_DEPARTMENTS': // DONE
-                viewAllDepartments();
-                break;
-            case 'ADD_DEPARTMENT': // DONE
-                addDepartment();
-                break;
-            default:
-                quit();
-                break;
-        }
-    })
+            switch (choice) {
+                case 'VIEW_EMPLOYEES': // DONE
+                    viewAllEmployees();
+                    break;
+                case 'ADD_EMPLOYEE': // DONE
+                    addEmployee();
+                    break;
+                case 'UPDATE_EMPLOYEE_ROLE': // DONE
+                    updateEmployeeRole();
+                    break;
+                case 'VIEW_ROLES': // DONE
+                    viewAllRoles();
+                    break;
+                case 'ADD_ROLE': // DONE 
+                    addRole();
+                    break;
+                case 'View_DEPARTMENTS': // DONE
+                    viewAllDepartments();
+                    break;
+                case 'ADD_DEPARTMENT': // DONE
+                    addDepartment();
+                    break;
+                case 'DELETE_DEPARTMENT': // DONE
+                    deleteDepartment();
+                    break;
+                case 'DELETE_ROLE': // DONE
+                    deleteRole();
+                    break;
+                case 'DELETE_EMPLOYEE': // DONE
+                    deleteEmployee();
+                    break;
+                default:
+                    quit();
+                    break;
+            }
+        })
 }
 
 //View All Employees
-function viewAllEmployees(){
+function viewAllEmployees() {
     db.getAllEmployees()
-        .then(({rows})=>{
-          const employees = rows;
-          console.log('\n');
-          console.table(employees);
+        .then(({ rows }) => {
+            const employees = rows;
+            console.log('\n');
+            console.table(employees);
         })
-        .then(()=> loadCMSPrompts());
-}    
+        .then(() => loadCMSPrompts());
+}
 
 //View All Roles
-function viewAllRoles(){
+function viewAllRoles() {
     db.getAllRoles()
-        .then(({rows})=>{
-          const roles = rows;
-          console.log('\n');
-          console.table(roles);
+        .then(({ rows }) => {
+            const roles = rows;
+            console.log('\n');
+            console.table(roles);
         })
-        .then(()=> loadCMSPrompts());
-}    
+        .then(() => loadCMSPrompts());
+}
 
 //View All Departments
-function viewAllDepartments(){
+function viewAllDepartments() {
     db.getAllDepartments()
-        .then(({rows})=>{
-          const departments = rows;
-          console.log('\n');
-          console.table(departments);
+        .then(({ rows }) => {
+            const departments = rows;
+            console.log('\n');
+            console.table(departments);
         })
-        .then(()=> loadCMSPrompts());
-}    
+        .then(() => loadCMSPrompts());
+}
 
 // Add Department
-async function addDepartment(){
+async function addDepartment() {
     inquirer.prompt([
         {
             name: 'deptName',
@@ -144,17 +165,17 @@ async function addDepartment(){
             type: 'input'
         }
     ])
-    .then(resp => {
-        db.createDepartment(resp.deptName)
-        .then(() => {
-            console.log("Department has been added");
-            loadCMSPrompts();
+        .then(resp => {
+            db.createDepartment(resp.deptName)
+                .then(() => {
+                    console.log("Department has been added");
+                    loadCMSPrompts();
+                })
         })
-    })
 }
 
 // Add Role
-async function addRole(){
+async function addRole() {
     //fetch department
     const queryResp = await db.getAllDepartments();
 
@@ -184,16 +205,16 @@ async function addRole(){
         },
 
     ])
-    .then(resp => {
-        db.createRole(resp.title,resp.salary,resp.dept)
-        .then(() => {
-            console.log("Role has been added");
-            loadCMSPrompts();
+        .then(resp => {
+            db.createRole(resp.title, resp.salary, resp.dept)
+                .then(() => {
+                    console.log("Role has been added");
+                    loadCMSPrompts();
+                })
         })
-    })
 }
 
-async function addEmployee(){
+async function addEmployee() {
 
     //fetch role
     const queryRoleResp = await db.getAllRoles();
@@ -208,7 +229,7 @@ async function addEmployee(){
     //fetch employees
     const queryEmpResp = await db.getAllEmployees();
 
-    
+
 
 
     const employeesArray = queryEmpResp.rows.map(emp => {
@@ -218,7 +239,7 @@ async function addEmployee(){
         }
     });
 
-    employeesArray.unshift({ name: "No Manager", value: null});
+    employeesArray.unshift({ name: "No Manager", value: null });
 
     inquirer.prompt([
         {
@@ -244,16 +265,16 @@ async function addEmployee(){
             choices: employeesArray
         }
     ])
-    .then(resp => {
-        db.createEmployee(resp.employeefName,resp.employeelName,resp.employeeRole,resp.employeeManager)
-        .then(() => {
-            console.log("Employee has been added");
-            loadCMSPrompts();
+        .then(resp => {
+            db.createEmployee(resp.employeefName, resp.employeelName, resp.employeeRole, resp.employeeManager)
+                .then(() => {
+                    console.log("Employee has been added");
+                    loadCMSPrompts();
+                })
         })
-    })
 }
 
-async function updateEmployeeRole(){
+async function updateEmployeeRole() {
 
     //fetch role
     const queryRoleResp = await db.getAllRoles();
@@ -289,16 +310,110 @@ async function updateEmployeeRole(){
             choices: rolesArray
         }
     ])
-    .then(resp => {
-        db.UpdateEmployeeRole(resp.employee,resp.newRole)
-        .then(() => {
-            console.log("Employee's Role has been updated");
-            loadCMSPrompts();
+        .then(resp => {
+            db.UpdateEmployeeRole(resp.employee, resp.newRole)
+                .then(() => {
+                    console.log("Employee's Role has been updated");
+                    loadCMSPrompts();
+                })
         })
-    })
 }
 
-function quit(){
+//Bonus - Delete Department
+
+// Delete Department
+async function deleteDepartment() {
+    //fetch departments
+    const queryResp = await db.getAllDepartments();
+
+    const choicesArray = queryResp.rows.map(dept => {
+        return {
+            name: dept.name,
+            value: dept.id
+        }
+    })
+
+    inquirer.prompt([
+        {
+            name: 'dept',
+            message: "Which department would you like to delete?",
+            type: 'list',
+            choices: choicesArray
+        },
+
+    ])
+        .then(resp => {
+            db.deleteDepartment(resp.dept)
+                .then(() => {
+                    console.log("Department has been deleted");
+                    loadCMSPrompts();
+                })
+        })
+}
+
+// Delete Role
+async function deleteRole() {
+    //fetch roles
+    const queryResp = await db.getAllRoles();
+
+    const choicesArray = queryResp.rows.map(role => {
+        return {
+            name: role.title,
+            value: role.id
+        }
+    })
+
+    inquirer.prompt([
+        {
+            name: 'role',
+            message: "Which role would you like to delete?",
+            type: 'list',
+            choices: choicesArray
+        },
+
+    ])
+        .then(resp => {
+            db.deleteRole(resp.role)
+                .then(() => {
+                    console.log("Role has been deleted");
+                    loadCMSPrompts();
+                })
+        })
+}
+
+// Delete Employee
+async function deleteEmployee() {
+    //fetch Employees
+    const queryResp = await db.getAllEmployees();
+
+    const choicesArray = queryResp.rows.map(emp => {
+        return {
+            name: emp.first_name + ' ' + emp.last_name,
+            value: emp.id
+        }
+    })
+
+    inquirer.prompt([
+        {
+            name: 'emp',
+            message: "Which employee would you like to delete?",
+            type: 'list',
+            choices: choicesArray
+        },
+
+    ])
+        .then(resp => {
+            db.deleteEmployee(resp.emp)
+                .then(() => {
+                    console.log("Employee has been deleted");
+                    loadCMSPrompts();
+                })
+        })
+}
+
+
+
+function quit() {
     console.log("Thank you for using the CMS System!");
     process.exit();
 }
