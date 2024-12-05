@@ -29,7 +29,7 @@ export default class DB {
     //get all roles
     getAllRoles() {
         return this.query(
-            "SELECT role.id,role.title,role.salary,department.id,department.name \
+            "SELECT role.id,role.title,role.salary,department.name as dept_name \
                 FROM role INNER JOIN department ON role.department_id = department.id;"
         );
     }
@@ -84,7 +84,7 @@ export default class DB {
     //Update employee Managers
     UpdateEmployeeManager(emp_id: number,new_emp_mgr_id:number ){
         return this.query(
-            "UPDATE employee SET manager_id=$2 WHERE id=$1) VALUES ($1,$2)",
+            "UPDATE employee SET manager_id=$2 WHERE id=$1",
             [emp_id,new_emp_mgr_id]
         );
     }
