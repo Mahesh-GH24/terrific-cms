@@ -62,6 +62,18 @@ function loadCMSPrompts() {
                 {
                     name: "Add Department",
                     value: "ADD_DEPARTMENT"
+                },                                 
+                {
+                    name: "Update Employees Manager",
+                    value: "UPDATE_EMPLOYEE_MANAGER"
+                },
+                {
+                    name: "View Employees by Manager",
+                    value: "VIEW_EMPS_BY_MGR"
+                },
+                {
+                    name: "View Employees By Department",
+                    value: "VIEW_EMPS_BY_DEPT"
                 },
                 {
                     name: "Delete Department",
@@ -74,18 +86,6 @@ function loadCMSPrompts() {
                 {
                     name: "Delete Employee",
                     value: "DELETE_EMPLOYEE"
-                },
-                {
-                    name: "View Employees by Manager",
-                    value: "VIEW_EMPS_BY_MGR"
-                },
-                {
-                    name: "View Employees By Department",
-                    value: "VIEW_EMPS_BY_DEPT"
-                },
-                {
-                    name: "Update Employees Manager",
-                    value: "UPDATE_EMPLOYEE_MANAGER"
                 },
                 {
                     name: "View Total Utilized Budget By Department",
