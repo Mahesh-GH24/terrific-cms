@@ -24,10 +24,14 @@
    node,npm,postgres, SQL,Connection Pool,asciiart for logo
 
    ## Usage
-   Please refer to the screen shot below and this pops up as soon as you type in node dist/index.js. From their, please select the different options - view employees, departments etc and if you would like to quit, please select quit option. After each successful execution of the results, you would be prompted to try various options or execute reports.
+   Please refer to the screen shot below and this pops up as soon as you type in node dist/index.js.I have also attached the link to the walkthrough video that provides a complete overview of this application. From the main screen, please select the different options - view employees, departments etc and if you would like to quit, please select quit option. After each successful execution of the results, you would be prompted to try various options or execute reports.
+
+   Walkthrough Video: https://drive.google.com/file/d/10LwOXzP98xhh1rrxfB1eGurIBRh1tMxw/view?usp=sharing 
+
    Screenshot:
 
    ![index](/main/assets/images/CMS_EntryScreen.png)
+
    
 
    ## Challenges
